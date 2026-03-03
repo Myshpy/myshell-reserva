@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myshell - Pedidos</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#fff5f7;
+  text-align:center;
+  padding:40px;
+}
+
+h1{
+  color:#e91e63;
+}
+
+input, textarea{
+  width:80%;
+  padding:10px;
+  margin:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  background:#e91e63;
+  color:white;
+  padding:12px 25px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+button:hover{
+  background:#c2185b;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🍩 Myshell - Pedido Online</h1>
+
+<input type="text" id="nombre" placeholder="Nombre"><br>
+<input type="text" id="apellido" placeholder="Apellido"><br>
+<input type="number" id="whatsapp" placeholder="WhatsApp sin 591"><br>
+
+<textarea id="pedido" placeholder="Detalle del pedido"></textarea><br>
+
+<input type="number" id="total" placeholder="Total en Bs"><br>
+
+<button onclick="enviarPedido()">Enviar Pedido</button>
+
+<script>
+async function enviarPedido(){
+
+  let nombre = document.getElementById("nombre").value;
+  let apellido = document.getElementById("apellido").value;
+  let whatsapp = document.getElementById("whatsapp").value;
+  let pedido = document.getElementById("pedido").value;
+  let total = document.getElementById("total").value;
+
+  if(nombre === "" || whatsapp === ""){
+    alert("Nombre y WhatsApp son obligatorios");
+    return;
+  }
+
+  if(parseFloat(total) < 30){
+    alert("Pedido mínimo 30 Bs");
+    return;
+  }
+
+  const datos = {
+    nombre: nombre,
+    apellido: apellido,
+    whatsapp: whatsapp,
+    pedido: pedido,
+    total: total
+  };
+
+  await fetch("https://script.google.com/macros/s/AKfycbzlu0bB6Z7R5Tg7LNXXeTjSwX0sOH_cLGVIjBn9KRFdEVYGrm7onw_-q4aF0mQDGj3JkQ/exec", {
+    method: "POST",
+    body: JSON.stringify(datos)
+  });
+
+  alert("Pedido registrado correctamente 🍩");
+
+  window.open("https://wa.me/591" + whatsapp);
+
+}
+</script>
+
+</body>
+</html>
