@@ -1,130 +1,194 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Myshell - Tienda Oficial</title>
+<title>Myshell Black Label</title>
 
 <style>
+:root{
+  --pink:#e91e63;
+  --bg:#fff0f5;
+  --card:#ffffff;
+  --text:#333;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121212;
+    --card:#1e1e1e;
+    --text:#f5f5f5;
+  }
+}
+
 body{
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   margin:0;
-  background:#fff5f7;
+  background:var(--bg);
+  color:var(--text);
+  transition:0.3s;
 }
 
 header{
-  background:#e91e63;
+  background:linear-gradient(135deg,#e91e63,#ff4081);
   color:white;
-  padding:20px;
+  padding:25px;
   text-align:center;
-  font-size:24px;
+  font-size:26px;
   font-weight:bold;
+  letter-spacing:1px;
 }
 
 .container{
   padding:20px;
-  max-width:900px;
+  max-width:1100px;
   margin:auto;
 }
 
 .products{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap:15px;
+  grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+  gap:20px;
 }
 
 .card{
-  background:white;
+  background:var(--card);
   padding:15px;
-  border-radius:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
   text-align:center;
+  transition:0.3s;
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:15px;
 }
 
 .card button{
-  background:#e91e63;
+  background:var(--pink);
   color:white;
   border:none;
-  padding:8px 15px;
-  border-radius:8px;
+  padding:10px 15px;
+  border-radius:12px;
   cursor:pointer;
+  margin-top:10px;
+  font-weight:bold;
 }
 
-.card button:hover{
-  background:#c2185b;
+.card button:active{
+  transform:scale(0.95);
 }
 
 .cart{
-  margin-top:30px;
-  background:white;
-  padding:20px;
-  border-radius:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  margin-top:50px;
+  background:var(--card);
+  padding:30px;
+  border-radius:25px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
 .cart-item{
   display:flex;
   justify-content:space-between;
-  margin-bottom:8px;
+  margin-bottom:12px;
 }
 
 .total{
-  font-size:20px;
+  font-size:24px;
   font-weight:bold;
   margin-top:15px;
+  color:var(--pink);
 }
 
 input{
   width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
+  padding:12px;
+  margin:10px 0;
+  border-radius:12px;
   border:1px solid #ccc;
+  background:var(--card);
+  color:var(--text);
 }
 
 .checkout-btn{
   background:#4caf50;
-  margin-top:15px;
+  margin-top:20px;
+  padding:14px;
+  border:none;
+  border-radius:15px;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  width:100%;
+  font-weight:bold;
+}
+
+.notification{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:var(--pink);
+  color:white;
+  padding:12px 20px;
+  border-radius:15px;
+  opacity:0;
+  transition:0.3s;
+}
+
+.notification.show{
+  opacity:1;
 }
 </style>
 </head>
 
 <body>
 
-<header>🍩 Myshell - Tienda Oficial</header>
+<header>🍩 Myshell Black Label</header>
 
 <div class="container">
 
-<h2>Productos</h2>
+<h2>Nuestros Productos</h2>
 
 <div class="products">
 
 <div class="card">
+<img src="imagenes/donitas.jpg">
 <h3>Donitas</h3>
 <p>1.50 Bs</p>
 <button onclick="addToCart('Donitas',1.5)">Agregar</button>
 </div>
 
 <div class="card">
+<img src="imagenes/conitos.jpg">
 <h3>Conitos</h3>
 <p>2 Bs</p>
 <button onclick="addToCart('Conitos',2)">Agregar</button>
 </div>
 
 <div class="card">
+<img src="imagenes/alfajores.jpg">
 <h3>Alfajorcitos</h3>
 <p>2 Bs</p>
 <button onclick="addToCart('Alfajorcitos',2)">Agregar</button>
 </div>
 
 <div class="card">
+<img src="imagenes/empanadas.jpg">
 <h3>Empanaditas Royal</h3>
 <p>2 Bs</p>
 <button onclick="addToCart('Empanaditas Royal',2)">Agregar</button>
 </div>
 
 <div class="card">
+<img src="imagenes/caja.jpg">
 <h3>Caja CEO 🎁</h3>
 <p>25 Bs (Incluye 3 de cada producto)</p>
 <button onclick="addToCart('Caja CEO (3 de cada producto)',25)">Agregar</button>
@@ -133,19 +197,21 @@ input{
 </div>
 
 <div class="cart">
-<h2>🛒 Carrito</h2>
 
+<h2>🛒 Carrito</h2>
 <div id="cartItems"></div>
 
 <div class="total">
 Total: <span id="total">0</span> Bs
 </div>
 
-<h3>Datos del Cliente</h3>
+<h3>Código Promocional</h3>
+<input type="text" id="promo" placeholder="Ingresa código (ej: CEOLOVE)">
 
+<h3>Datos del Cliente</h3>
 <input type="text" id="nombre" placeholder="Nombre">
-<input type="text" id="apellido" placeholder="Apellido">
 <input type="number" id="whatsapp" placeholder="WhatsApp sin 591">
+<input type="text" id="direccion" placeholder="Lugar de entrega (a coordinar)">
 
 <h3>Fecha de Entrega</h3>
 <input type="date" id="fechaEntrega">
@@ -156,32 +222,55 @@ Total: <span id="total">0</span> Bs
 
 </div>
 
+<div class="notification" id="notif">Producto agregado 🛒</div>
+
 <script>
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 let total = 0;
+let finalTotal = 0;
+
+/* =========================
+   PERSISTENCIA
+========================= */
+function saveData(){
+  localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("orders", JSON.stringify(orders));
+}
+
+/* =========================
+   DASHBOARD INTERNO
+========================= */
+function updateDashboard(){
+  let totalVentas = orders.reduce((acc,o)=> acc + o.total,0);
+  let pendientes = orders.filter(o=>o.estado==="Pendiente").length;
+
+  document.getElementById("dashboard").innerHTML = `
+    💰 Ventas Totales: ${totalVentas.toFixed(2)} Bs |
+    📦 Pedidos: ${orders.length} |
+    ⏳ Pendientes: ${pendientes}
+  `;
+}
+
+/* =========================
+   CARRITO
+========================= */
 
 function addToCart(product, price){
-
   let existing = cart.find(item => item.product === product);
-
-  if(existing){
-    existing.quantity += 1;
-  } else {
-    cart.push({product, price, quantity:1});
-  }
-
+  if(existing){ existing.quantity += 1; }
+  else{ cart.push({product, price, quantity:1}); }
+  saveData();
   updateCart();
 }
 
 function updateCart(){
-
   const cartDiv = document.getElementById("cartItems");
   cartDiv.innerHTML = "";
   total = 0;
 
-  cart.forEach((item,index) => {
-
+  cart.forEach((item,index)=>{
     let subtotal = item.price * item.quantity;
     total += subtotal;
 
@@ -193,66 +282,128 @@ function updateCart(){
     `;
   });
 
-  document.getElementById("total").innerText = total.toFixed(2);
+  applyPromo();
 }
 
 function removeItem(index){
   cart.splice(index,1);
+  saveData();
   updateCart();
 }
 
-async function checkout(){
+/* =========================
+   PROMO
+========================= */
+
+function applyPromo(){
+  let promo = document.getElementById("promo").value.trim().toUpperCase();
+  finalTotal = total;
+
+  if(promo === "CEOLOVE"){
+    if(total > 50){ finalTotal = total * 0.9; }
+    else{ finalTotal = total - 5; }
+    if(finalTotal < 0){ finalTotal = 0; }
+  }
+
+  document.getElementById("total").innerText = finalTotal.toFixed(2);
+}
+
+document.getElementById("promo").addEventListener("input", applyPromo);
+
+/* =========================
+   CHECKOUT
+========================= */
+
+function checkout(){
 
   let nombre = document.getElementById("nombre").value;
-  let apellido = document.getElementById("apellido").value;
   let whatsapp = document.getElementById("whatsapp").value;
+  let direccion = document.getElementById("direccion").value;
   let fechaEntrega = document.getElementById("fechaEntrega").value;
 
-  if(cart.length === 0){
-    alert("El carrito está vacío");
-    return;
-  }
+  if(cart.length === 0){ alert("Carrito vacío"); return; }
+  if(finalTotal < 30){ alert("Pedido mínimo 30 Bs"); return; }
+  if(nombre === "" || whatsapp === ""){ alert("Datos obligatorios"); return; }
 
-  if(total < 30){
-    alert("Pedido mínimo 30 Bs");
-    return;
-  }
-
-  if(nombre === "" || whatsapp === ""){
-    alert("Nombre y WhatsApp obligatorios");
-    return;
-  }
-
-  if(fechaEntrega === ""){
-    alert("Selecciona fecha de entrega");
-    return;
-  }
-
-  let detalle = cart.map(item => 
+  let detalle = cart.map(item =>
     `${item.product} x${item.quantity}`
   ).join(" | ");
 
-  detalle += " | Entrega: " + fechaEntrega;
-
-  const datos = {
-    nombre: nombre,
-    apellido: apellido,
-    whatsapp: whatsapp,
-    pedido: detalle,
-    total: total
+  let newOrder = {
+    id: Date.now(),
+    nombre,
+    whatsapp,
+    detalle,
+    total: finalTotal,
+    estado: "Pendiente"
   };
 
-  await fetch("https://script.google.com/macros/s/AKfycbzlu0bB6Z7R5Tg7LNXXeTjSwX0sOH_cLGVIjBn9KRFdEVYGrm7onw_-q4aF0mQDGj3JkQ/exec", {
-    method: "POST",
-    body: JSON.stringify(datos)
-  });
+  orders.push(newOrder);
+  cart = [];
+  saveData();
+  updateCart();
+  renderOrders();
+  updateDashboard();
 
-  alert("Pedido enviado correctamente 🍩");
+  let mensaje = `Hola ${nombre} 💖 tu pedido está registrado:\n\n${detalle}\n\nTotal: ${finalTotal.toFixed(2)} Bs`;
 
-  window.open("https://wa.me/591" + whatsapp);
+  window.open("https://wa.me/591" + whatsapp + "?text=" + encodeURIComponent(mensaje));
 }
-hhjsgondkiglolrga
-</script>
 
-</body>
-</html>
+/* =========================
+   PANEL ADMIN INTERNO
+========================= */
+
+function renderOrders(){
+  let adminDiv = document.getElementById("adminOrders");
+  adminDiv.innerHTML = "";
+
+  orders.forEach(order=>{
+    adminDiv.innerHTML += `
+      <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:10px;">
+        <b>${order.nombre}</b> - ${order.total} Bs <br>
+        ${order.detalle} <br>
+        Estado:
+        <select onchange="updateStatus(${order.id},this.value)">
+          <option ${order.estado==="Pendiente"?"selected":""}>Pendiente</option>
+          <option ${order.estado==="Confirmado"?"selected":""}>Confirmado</option>
+          <option ${order.estado==="Entregado"?"selected":""}>Entregado</option>
+          <option ${order.estado==="Cancelado"?"selected":""}>Cancelado</option>
+        </select>
+        <br>
+        <button onclick="sendWhatsApp(${order.id})">📲 Avisar</button>
+      </div>
+    `;
+  });
+}
+
+function updateStatus(id,value){
+  let order = orders.find(o=>o.id===id);
+  order.estado = value;
+  saveData();
+  updateDashboard();
+}
+
+function sendWhatsApp(id){
+  let order = orders.find(o=>o.id===id);
+  let mensaje = `Hola ${order.nombre} 💖 tu pedido ahora está: ${order.estado}`;
+  window.open("https://wa.me/591" + order.whatsapp + "?text=" + encodeURIComponent(mensaje));
+}
+
+/* =========================
+   INICIALIZAR
+========================= */
+
+document.body.insertAdjacentHTML("beforeend",`
+<div style="margin:50px;padding:30px;background:#fff;border-radius:20px;">
+<h2>🔐 Panel Empresaria</h2>
+<div id="dashboard"></div>
+<div id="adminOrders"></div>
+</div>
+`);
+
+updateCart();
+renderOrders();
+updateDashboard();
+
+</script>
