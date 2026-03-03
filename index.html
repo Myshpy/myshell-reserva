@@ -1,84 +1,244 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Myshell - Pedidos</title>
+<title>Myshell - Tienda Oficial</title>
 
 <style>
 body{
   font-family: Arial, sans-serif;
+  margin:0;
   background:#fff5f7;
+}
+
+header{
+  background:#e91e63;
+  color:white;
+  padding:20px;
   text-align:center;
-  padding:40px;
+  font-size:24px;
+  font-weight:bold;
 }
 
-h1{
-  color:#e91e63;
+.container{
+  padding:20px;
+  max-width:900px;
+  margin:auto;
 }
 
-input, textarea{
-  width:80%;
+.products{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+.card button{
+  background:#e91e63;
+  color:white;
+  border:none;
+  padding:8px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.card button:hover{
+  background:#c2185b;
+}
+
+.cart{
+  margin-top:30px;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+
+.total{
+  font-size:20px;
+  font-weight:bold;
+  margin-top:15px;
+}
+
+input{
+  width:100%;
   padding:10px;
-  margin:8px;
+  margin:8px 0;
   border-radius:8px;
   border:1px solid #ccc;
 }
 
-button{
-  background:#e91e63;
-  color:white;
-  padding:12px 25px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:16px;
-}
-
-button:hover{
-  background:#c2185b;
+.checkout-btn{
+  background:#4caf50;
+  margin-top:15px;
 }
 </style>
-
 </head>
+
 <body>
 
-<h1>🍩 Myshell - Pedido Online</h1>
+<header>🍩 Myshell - Tienda Oficial</header>
 
-<input type="text" id="nombre" placeholder="Nombre"><br>
-<input type="text" id="apellido" placeholder="Apellido"><br>
-<input type="number" id="whatsapp" placeholder="WhatsApp sin 591"><br>
+<div class="container">
 
-<textarea id="pedido" placeholder="Detalle del pedido"></textarea><br>
+<h2>Productos</h2>
 
-<input type="number" id="total" placeholder="Total en Bs"><br>
+<div class="products">
 
-<button onclick="enviarPedido()">Enviar Pedido</button>
+<div class="card">
+<h3>Donitas</h3>
+<p>1.50 Bs</p>
+<button onclick="addToCart('Donitas',1.5)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Conitos</h3>
+<p>2 Bs</p>
+<button onclick="addToCart('Conitos',2)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Alfajorcitos</h3>
+<p>2 Bs</p>
+<button onclick="addToCart('Alfajorcitos',2)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Empanaditas Royal</h3>
+<p>2 Bs</p>
+<button onclick="addToCart('Empanaditas Royal',2)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Caja CEO 🎁</h3>
+<p>25 Bs (Incluye 3 de cada producto)</p>
+<button onclick="addToCart('Caja CEO (3 de cada producto)',25)">Agregar</button>
+</div>
+
+</div>
+
+<div class="cart">
+<h2>🛒 Carrito</h2>
+
+<div id="cartItems"></div>
+
+<div class="total">
+Total: <span id="total">0</span> Bs
+</div>
+
+<h3>Datos del Cliente</h3>
+
+<input type="text" id="nombre" placeholder="Nombre">
+<input type="text" id="apellido" placeholder="Apellido">
+<input type="number" id="whatsapp" placeholder="WhatsApp sin 591">
+
+<h3>Fecha de Entrega</h3>
+<input type="date" id="fechaEntrega">
+
+<button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+
+</div>
+
+</div>
 
 <script>
-async function enviarPedido(){
+
+let cart = [];
+let total = 0;
+
+function addToCart(product, price){
+
+  let existing = cart.find(item => item.product === product);
+
+  if(existing){
+    existing.quantity += 1;
+  } else {
+    cart.push({product, price, quantity:1});
+  }
+
+  updateCart();
+}
+
+function updateCart(){
+
+  const cartDiv = document.getElementById("cartItems");
+  cartDiv.innerHTML = "";
+  total = 0;
+
+  cart.forEach((item,index) => {
+
+    let subtotal = item.price * item.quantity;
+    total += subtotal;
+
+    cartDiv.innerHTML += `
+      <div class="cart-item">
+        ${item.product} x${item.quantity} - ${subtotal.toFixed(2)} Bs
+        <button onclick="removeItem(${index})">❌</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText = total.toFixed(2);
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  updateCart();
+}
+
+async function checkout(){
 
   let nombre = document.getElementById("nombre").value;
   let apellido = document.getElementById("apellido").value;
   let whatsapp = document.getElementById("whatsapp").value;
-  let pedido = document.getElementById("pedido").value;
-  let total = document.getElementById("total").value;
+  let fechaEntrega = document.getElementById("fechaEntrega").value;
 
-  if(nombre === "" || whatsapp === ""){
-    alert("Nombre y WhatsApp son obligatorios");
+  if(cart.length === 0){
+    alert("El carrito está vacío");
     return;
   }
 
-  if(parseFloat(total) < 30){
+  if(total < 30){
     alert("Pedido mínimo 30 Bs");
     return;
   }
+
+  if(nombre === "" || whatsapp === ""){
+    alert("Nombre y WhatsApp obligatorios");
+    return;
+  }
+
+  if(fechaEntrega === ""){
+    alert("Selecciona fecha de entrega");
+    return;
+  }
+
+  let detalle = cart.map(item => 
+    `${item.product} x${item.quantity}`
+  ).join(" | ");
+
+  detalle += " | Entrega: " + fechaEntrega;
 
   const datos = {
     nombre: nombre,
     apellido: apellido,
     whatsapp: whatsapp,
-    pedido: pedido,
+    pedido: detalle,
     total: total
   };
 
@@ -87,11 +247,11 @@ async function enviarPedido(){
     body: JSON.stringify(datos)
   });
 
-  alert("Pedido registrado correctamente 🍩");
+  alert("Pedido enviado correctamente 🍩");
 
   window.open("https://wa.me/591" + whatsapp);
-
 }
+hhjsgondkiglolrga
 </script>
 
 </body>
