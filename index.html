@@ -337,7 +337,8 @@ function checkout(){
     total: finalTotal,
     estado: "Pendiente"
   };
-
+  guardarPedidoEnNube(newOrder); // guarda en Firebase
+  
   orders.push(newOrder);
   cart = [];
   saveData();
@@ -407,3 +408,40 @@ renderOrders();
 updateDashboard();
 
 </script>
+  <script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, push, set } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC2LaTeLTXCVts7-J3CAr9RDM2kTjT0r0A",
+  authDomain: "myshell-manager.firebaseapp.com",
+  databaseURL: "https://myshell-manager-default-rtdb.firebaseio.com",
+  projectId: "myshell-manager",
+  storageBucket: "myshell-manager.firebasestorage.app",
+  messagingSenderId: "893720475905",
+  appId: "1:893720475905:web:96c6870c7c7bcaf2c10300"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.guardarPedidoEnNube = function(pedido){
+
+  const pedidosRef = ref(db, "pedidos");
+  const nuevoPedido = push(pedidosRef);
+
+  set(nuevoPedido,{
+    ...pedido,
+    fechaRegistro: new Date().toISOString()
+  });
+
+  console.log("Pedido guardado en Firebase");
+
+};
+
+</script>
+  
+</body>
+</html>
