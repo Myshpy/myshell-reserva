@@ -426,6 +426,22 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+    const pedidosRef = ref(db, "pedidos");
+
+onValue(pedidosRef, (snapshot) => {
+
+  const data = snapshot.val();
+
+  if(!data){
+    console.log("No hay pedidos aún");
+    return;
+  }
+
+  const pedidos = Object.values(data);
+
+  console.log("Pedidos en tiempo real:", pedidos);
+
+});
 
 window.guardarPedidoEnNube = function(pedido){
 
@@ -442,6 +458,5 @@ window.guardarPedidoEnNube = function(pedido){
 };
 
 </script>
-  
 </body>
 </html>
