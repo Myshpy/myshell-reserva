@@ -411,9 +411,8 @@ updateDashboard();
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getDatabase, ref, push, set } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
-
+import { getDatabase, ref, push, set, onValue } from 
+"https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyC2LaTeLTXCVts7-J3CAr9RDM2kTjT0r0A",
   authDomain: "myshell-manager.firebaseapp.com",
