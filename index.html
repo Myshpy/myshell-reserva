@@ -456,6 +456,12 @@ function actualizarGrafico(pedidos){
  });
 
 }
+  if("serviceWorker" in navigator){
+
+ navigator.serviceWorker.register("service-worker.js")
+ .then(()=> console.log("App lista para instalar"));
+
+}
 </script>
   <script type="module">
 
