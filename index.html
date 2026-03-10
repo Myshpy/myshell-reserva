@@ -435,6 +435,7 @@ document.body.insertAdjacentHTML("beforeend",`
 updateCart();
 renderOrders();
 updateDashboard();
+
 let grafico = null;
 
 function actualizarGrafico(pedidos){
@@ -470,17 +471,20 @@ function actualizarGrafico(pedidos){
        data:meses
      }]
    }
- });hy
+ });
 
 }
 </script>
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";   
-import { getDatabase, ref, push, set, onValue } from 
-"https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import { getDatabase, ref, push, set, onValue } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyC2LaTeLTXCVts7-J3CAr9RDM2kTjT0r0A",
   authDomain: "myshell-manager.firebaseapp.com",
@@ -490,13 +494,12 @@ const firebaseConfig = {
   messagingSenderId: "893720475905",
   appId: "1:893720475905:web:96c6870c7c7bcaf2c10300"
 };
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-    const pedidosRef = ref(db, "pedidos");
+
+const pedidosRef = ref(db, "pedidos");
 
 onValue(pedidosRef, (snapshot) => {
 
@@ -508,15 +511,16 @@ onValue(pedidosRef, (snapshot) => {
   }
 
   const pedidos = Object.values(data);
-   let totalVentas = 0;
 
- pedidos.forEach(p=>{
-  totalVentas += Number(p.total || 0);
-   
- });
+  let totalVentas = 0;
 
- document.getElementById("ventasTotales").innerText = totalVentas + " Bs";
- document.getElementById("cantidadPedidos").innerText = pedidos.length;
+  pedidos.forEach(p=>{
+    totalVentas += Number(p.total || 0);
+  });
+
+  document.getElementById("ventasTotales").innerText = totalVentas + " Bs";
+  document.getElementById("cantidadPedidos").innerText = pedidos.length;
+
   actualizarGrafico(pedidos);
 
 });
