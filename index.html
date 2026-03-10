@@ -405,6 +405,8 @@ document.body.insertAdjacentHTML("beforeend",`
 
 <p>📦 Pedidos Recibidos</p>
 <h3 id="cantidadPedidos">0</h3>
+<h3>📈 Ventas por mes</h3>
+<canvas id="graficoVentas"></canvas>
 
 </div>
 <div id="dashboard"></div>
@@ -415,7 +417,44 @@ document.body.insertAdjacentHTML("beforeend",`
 updateCart();
 renderOrders();
 updateDashboard();
+let grafico = null;
 
+function actualizarGrafico(pedidos){
+
+ const meses = new Array(12).fill(0);
+
+ pedidos.forEach(p => {
+
+   if(!p.fechaRegistro) return;
+
+   const fecha = new Date(p.fechaRegistro);
+   const mes = fecha.getMonth();
+
+   meses[mes] += Number(p.total || 0);
+
+ });
+
+ if(grafico){
+   grafico.destroy();
+ }
+
+ const ctx = document.getElementById("graficoVentas");
+
+ grafico = new Chart(ctx,{
+   type:"bar",
+   data:{
+     labels:[
+       "Ene","Feb","Mar","Abr","May","Jun",
+       "Jul","Ago","Sep","Oct","Nov","Dic"
+     ],
+     datasets:[{
+       label:"Ventas Bs",
+       data:meses
+     }]
+   }
+ });
+
+}
 </script>
   <script type="module">
 
@@ -450,10 +489,12 @@ onValue(pedidosRef, (snapshot) => {
 
  pedidos.forEach(p=>{
   totalVentas += Number(p.total || 0);
+   
  });
 
  document.getElementById("ventasTotales").innerText = totalVentas + " Bs";
  document.getElementById("cantidadPedidos").innerText = pedidos.length;
+  actualizarGrafico(pedidos);
 
 });
 
@@ -476,5 +517,6 @@ window.guardarPedidoEnNube = function(pedido){
 };
 
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
