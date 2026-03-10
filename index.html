@@ -398,7 +398,21 @@ function sendWhatsApp(id){
 
 document.body.insertAdjacentHTML("beforeend",`
 <div style="margin:50px;padding:30px;background:#fff;border-radius:20px;">
+<div id="loginPanel">
+
+<h2>Login Administradora</h2>
+
+<input id="email" placeholder="correo">
+<input id="password" type="password" placeholder="contraseña">
+
+<button onclick="login()">Entrar</button>
+
+</div>
 <h2>🔐 Panel Empresaria</h2>
+<div id="panelAdmin" style="display:none;">
+
+<h2>🔐 Panel Empresaria</h2>
+
 <div style="margin-top:20px">
 
 <p>💰 Ventas Totales</p>
@@ -406,15 +420,18 @@ document.body.insertAdjacentHTML("beforeend",`
 
 <p>📦 Pedidos Recibidos</p>
 <h3 id="cantidadPedidos">0</h3>
+
 <h3>📈 Ventas por mes</h3>
 <canvas id="graficoVentas"></canvas>
 
 </div>
+
 <div id="dashboard"></div>
 <div id="adminOrders"></div>
-</div>
-`);
 
+<button onclick="logout()">Cerrar sesión</button>
+
+</div>
 updateCart();
 renderOrders();
 updateDashboard();
@@ -453,13 +470,15 @@ function actualizarGrafico(pedidos){
        data:meses
      }]
    }
- });
+ });hy
 
 }
 </script>
   <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";   
 import { getDatabase, ref, push, set, onValue } from 
 "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
 const firebaseConfig = {
@@ -471,8 +490,11 @@ const firebaseConfig = {
   messagingSenderId: "893720475905",
   appId: "1:893720475905:web:96c6870c7c7bcaf2c10300"
 };
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
     const pedidosRef = ref(db, "pedidos");
 
@@ -522,6 +544,41 @@ if("serviceWorker" in navigator){
  .then(()=> console.log("App lista para instalar"));
 
 }
+  window.login = function(){
+
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+signInWithEmailAndPassword(auth,email,password)
+.then(()=>{
+ console.log("Login correcto");
+})
+.catch((error)=>{
+ alert("Correo o contraseña incorrectos");
+ console.log(error);
+});
+
+}
+
+onAuthStateChanged(auth,(user)=>{
+
+ if(user){
+
+  document.getElementById("loginPanel").style.display="none";
+  document.getElementById("panelAdmin").style.display="block";
+
+ }else{
+
+  document.getElementById("loginPanel").style.display="block";
+  document.getElementById("panelAdmin").style.display="none";
+
+ }
+
+});
+
+window.logout = function(){
+ signOut(auth);
+}  
 </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
