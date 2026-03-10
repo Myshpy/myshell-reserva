@@ -398,6 +398,15 @@ function sendWhatsApp(id){
 document.body.insertAdjacentHTML("beforeend",`
 <div style="margin:50px;padding:30px;background:#fff;border-radius:20px;">
 <h2>🔐 Panel Empresaria</h2>
+<div style="margin-top:20px">
+
+<p>💰 Ventas Totales</p>
+<h3 id="ventasTotales">0 Bs</h3>
+
+<p>📦 Pedidos Recibidos</p>
+<h3 id="cantidadPedidos">0</h3>
+
+</div>
 <div id="dashboard"></div>
 <div id="adminOrders"></div>
 </div>
@@ -437,6 +446,16 @@ onValue(pedidosRef, (snapshot) => {
   }
 
   const pedidos = Object.values(data);
+   let totalVentas = 0;
+
+ pedidos.forEach(p=>{
+  totalVentas += Number(p.total || 0);
+ });
+
+ document.getElementById("ventasTotales").innerText = totalVentas + " Bs";
+ document.getElementById("cantidadPedidos").innerText = pedidos.length;
+
+});
 
   console.log("Pedidos en tiempo real:", pedidos);
 
